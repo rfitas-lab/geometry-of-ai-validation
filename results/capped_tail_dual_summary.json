@@ -1,0 +1,12 @@
+{
+  "description": "Numerical evaluation of the exact capped-tail dual",
+  "convergence_bins": [
+    2048,
+    4096,
+    8192
+  ],
+  "sensitivity_bins": 4096,
+  "monotone_frontier_m8_N64_grid": 0.16216045916785593,
+  "max_final_discrete_primal_dual_gap": 2.0706769632283795e-12,
+  "max_final_continuum_primal_gap": 1.9356169853046445e-07
+}

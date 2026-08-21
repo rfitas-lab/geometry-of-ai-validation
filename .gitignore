@@ -1,0 +1,20 @@
+# LaTeX build products
+output/
+tmp/
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Python build products and local environments
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local editor and operating-system files
+.DS_Store
+*.swp
+*~

@@ -1,0 +1,56 @@
+{
+  "dataset": "ScalingIntelligence/monkey_business",
+  "revision": "a9f8f73bcd6948a57ed922cba4e48062ef95f553",
+  "reference_candidates_per_problem": 2000,
+  "deployment_candidates_per_problem": 8000,
+  "high_search_scale": 4096,
+  "bootstrap_replicates": 20000,
+  "models": {
+    "Llama-3-8B-Instruct": {
+      "problems": 127,
+      "candidates_total": 1270000,
+      "candidates_reference": 254000,
+      "candidates_deployment": 1016000,
+      "truth_n1": 0.7683513779527559,
+      "truth_n4096": 0.8818853781855203,
+      "mean_delta": 0.11353400023276439,
+      "mean_delta_ci95": [
+        0.0747523261111876,
+        0.1538463280874902
+      ],
+      "macro_auc": 0.9069823612578529,
+      "macro_auc_ci95": [
+        0.8615789997038873,
+        0.9473783529846993
+      ],
+      "problems_harmed_any": 15,
+      "problems_harmed_gt_1pp": 14,
+      "problems_harmed_gt_5pp": 12,
+      "worst_delta": -0.479625,
+      "best_delta": 0.88025
+    },
+    "Llama-3-70B-Instruct": {
+      "problems": 127,
+      "candidates_total": 1270000,
+      "candidates_reference": 254000,
+      "candidates_deployment": 1016000,
+      "truth_n1": 0.930525590551181,
+      "truth_n4096": 0.9684999831570656,
+      "mean_delta": 0.03797439260588461,
+      "mean_delta_ci95": [
+        0.019542727629374743,
+        0.057586812680170116
+      ],
+      "macro_auc": 0.9616556923292199,
+      "macro_auc_ci95": [
+        0.9230187886549741,
+        0.9901321194744982
+      ],
+      "problems_harmed_any": 4,
+      "problems_harmed_gt_1pp": 3,
+      "problems_harmed_gt_5pp": 3,
+      "worst_delta": -0.35975,
+      "best_delta": 0.433875
+    }
+  }
+}

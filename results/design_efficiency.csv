@@ -1,0 +1,11 @@
+model,design,design_n,target_N,target_truth,variance_per_label,labels_per_deployment_label,absolute_bias
+Llama-3-8B-Instruct,uniform candidates,1,4096,0.881885378186,1805.54403097,17333.7400036,0
+Llama-3-8B-Instruct,width-8 winners,8,4096,0.881885378186,225.205621854,2162.03849345,0
+Llama-3-8B-Instruct,width-64 winners,64,4096,0.881885378186,27.6648176211,265.590175407,0
+Llama-3-8B-Instruct,deployment winners,4096,4096,0.881885378186,0.104163557928,1,0
+Llama-3-8B-Instruct,top-5% rank audit,tail,4096,0.881885378186,89.538365819,859.593965494,5.700e-92
+Llama-3-70B-Instruct,uniform candidates,1,4096,0.968499983157,1982.79212784,64993.0297099,0
+Llama-3-70B-Instruct,width-8 winners,8,4096,0.968499983157,247.240365148,8104.17802849,0
+Llama-3-70B-Instruct,width-64 winners,64,4096,0.968499983157,30.2980387355,993.125453764,0
+Llama-3-70B-Instruct,deployment winners,4096,4096,0.968499983157,0.0305077657819,1,0
+Llama-3-70B-Instruct,top-5% rank audit,tail,4096,0.968499983157,98.2485137857,3220.44277146,5.700e-92
