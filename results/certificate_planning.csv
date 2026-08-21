@@ -1,0 +1,6 @@
+target_N,desired_full_width,minimum_prefix_m_with_infinite_tasks,structural_width_at_minimum_m,direct_winner_tasks_sufficient,confidence_level
+100,0.5,13,0.445999412044,30,0.95
+100,0.25,16,0.2130640124,119,0.95
+100,0.2,17,0.158682768951,185,0.95
+100,0.1,19,0.0820083217688,738,0.95
+100,0.05,21,0.0386209086124,2952,0.95

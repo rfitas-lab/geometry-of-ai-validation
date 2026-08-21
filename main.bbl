@@ -1,0 +1,241 @@
+\begin{thebibliography}{32}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Lu et~al.(2024)Lu, Lu, Lange, Foerster, Clune, and Ha]{lu2024}
+Chris Lu, Cong Lu, Robert~Tjarko Lange, Jakob Foerster, Jeff Clune, and David
+  Ha.
+\newblock The {AI} scientist: Towards fully automated open-ended scientific
+  discovery.
+\newblock arXiv:2408.06292, 2024.
+
+\bibitem[Gottweis et~al.(2026)Gottweis, Weng, Daryin, Tu, Sirkovic, Myaskovsky,
+  Glowaty, Weissenberger, Orlandi, Popovici, et~al.]{gottweis2026}
+Juraj Gottweis, Wei-Hung Weng, Alexander Daryin, Tao Tu, Petar Sirkovic, Artiom
+  Myaskovsky, Grzegorz Glowaty, Felix Weissenberger, Alessio Orlandi, Dan
+  Popovici, et~al.
+\newblock Accelerating scientific discovery with {AI} co-scientist.
+\newblock \emph{Nature}, 655:\penalty0 487--496, 2026.
+\newblock \doi{10.1038/s41586-026-10644-y}.
+
+\bibitem[Ellis and Castro(2026)]{ellis2026}
+Marquita Ellis and Paul Castro.
+\newblock Don't gamble, {GAMBLe}: An analytical framework for {AI}-driven
+  research systems.
+\newblock arXiv:2606.02863, 2026.
+
+\bibitem[Donoho(1994)]{donoho1994}
+David~L. Donoho.
+\newblock Statistical estimation and optimal recovery.
+\newblock \emph{The Annals of Statistics}, 22\penalty0 (1):\penalty0 238--270,
+  1994.
+\newblock \doi{10.1214/aos/1176325367}.
+
+\bibitem[Manski(2003)]{manski2003}
+Charles~F. Manski.
+\newblock \emph{Partial Identification of Probability Distributions}.
+\newblock Springer, New York, 2003.
+\newblock \doi{10.1007/b97478}.
+
+\bibitem[Berk et~al.(2013)Berk, Brown, Buja, Zhang, and Zhao]{berk2013}
+Richard Berk, Lawrence Brown, Andreas Buja, Kai Zhang, and Linda Zhao.
+\newblock Valid post-selection inference.
+\newblock \emph{The Annals of Statistics}, 41\penalty0 (2):\penalty0 802--837,
+  2013.
+\newblock \doi{10.1214/12-AOS1077}.
+
+\bibitem[Zrnic and Jordan(2023)]{zrnic2023}
+Tijana Zrnic and Michael~I. Jordan.
+\newblock Post-selection inference via algorithmic stability.
+\newblock \emph{The Annals of Statistics}, 51\penalty0 (4):\penalty0
+  1666--1691, 2023.
+\newblock \doi{10.1214/23-AOS2303}.
+
+\bibitem[Hausdorff(1921)]{hausdorff1921}
+Felix Hausdorff.
+\newblock Summationsmethoden und momentfolgen. {II}.
+\newblock \emph{Mathematische Zeitschrift}, 9:\penalty0 280--299, 1921.
+\newblock \doi{10.1007/BF01279032}.
+
+\bibitem[Dette and Studden(1997)]{dette1997}
+Holger Dette and William~J. Studden.
+\newblock \emph{The Theory of Canonical Moments with Applications in
+  Statistics, Probability, and Analysis}.
+\newblock Wiley Series in Probability and Statistics. Wiley, New York, 1997.
+\newblock ISBN 978-0-471-10991-4.
+
+\bibitem[Hubbard et~al.(2016)Hubbard, Kherad-Pajouh, and van~der
+  Laan]{hubbard2016}
+Alan~E. Hubbard, Sara Kherad-Pajouh, and Mark~J. van~der Laan.
+\newblock Statistical inference for data adaptive target parameters.
+\newblock \emph{The International Journal of Biostatistics}, 12\penalty0
+  (1):\penalty0 3--19, 2016.
+\newblock \doi{10.1515/ijb-2015-0013}.
+
+\bibitem[Kadane(1971)]{kadane1971}
+Joseph~B. Kadane.
+\newblock A moment problem for order statistics.
+\newblock \emph{The Annals of Mathematical Statistics}, 42\penalty0
+  (2):\penalty0 745--751, 1971.
+\newblock \doi{10.1214/aoms/1177693423}.
+
+\bibitem[David and Galambos(1974)]{david1974}
+H.~A. David and J.~Galambos.
+\newblock The asymptotic theory of concomitants of order statistics.
+\newblock \emph{Journal of Applied Probability}, 11\penalty0 (4):\penalty0
+  762--770, 1974.
+\newblock \doi{10.2307/3212559}.
+
+\bibitem[Papadatos(2017)]{papadatos2017}
+Nickos Papadatos.
+\newblock On sequences of expected maxima and expected ranges.
+\newblock \emph{Journal of Applied Probability}, 54\penalty0 (4):\penalty0
+  1144--1166, 2017.
+\newblock \doi{10.1017/jpr.2017.57}.
+
+\bibitem[Bernstein(1926)]{bernstein1926}
+Serge~N. Bernstein.
+\newblock \emph{Le\c{c}ons sur les propri\'{e}t\'{e}s extr\'{e}males et la
+  meilleure approximation des fonctions analytiques d'une variable r\'{e}elle}.
+\newblock Gauthier--Villars, Paris, 1926.
+
+\bibitem[Bojanov et~al.(1986)Bojanov, Braess, and Dyn]{bojanov1986}
+Borislav~D. Bojanov, Dietrich Braess, and Nira Dyn.
+\newblock Generalized gaussian quadrature formulas.
+\newblock \emph{Journal of Approximation Theory}, 48\penalty0 (4):\penalty0
+  335--353, 1986.
+\newblock \doi{10.1016/0021-9045(86)90008-0}.
+
+\bibitem[Watson(2000)]{watson2000}
+G.~A. Watson.
+\newblock Approximation in normed linear spaces.
+\newblock \emph{Journal of Computational and Applied Mathematics}, 121\penalty0
+  (1--2):\penalty0 1--36, 2000.
+\newblock \doi{10.1016/S0377-0427(00)00333-2}.
+
+\bibitem[Pinkus(1989)]{pinkus1989}
+Allan~M. Pinkus.
+\newblock \emph{On {$L^1$}-Approximation}, volume~93 of \emph{Cambridge Tracts
+  in Mathematics}.
+\newblock Cambridge University Press, Cambridge, UK, 1989.
+\newblock \doi{10.1017/CBO9780511526497}.
+
+\bibitem[Mason and Handscomb(2003)]{mason2003}
+J.~C. Mason and D.~C. Handscomb.
+\newblock \emph{Chebyshev Polynomials}.
+\newblock Chapman and Hall/CRC, Boca Raton, FL, 2003.
+\newblock \doi{10.1201/9781420036114}.
+
+\bibitem[Whittaker and Watson(1927)]{whittaker1927}
+E.~T. Whittaker and G.~N. Watson.
+\newblock \emph{A Course of Modern Analysis}.
+\newblock Cambridge University Press, Cambridge, UK, 4 edition, 1927.
+
+\bibitem[Lasserre(2007)]{lasserre2006}
+Jean~B. Lasserre.
+\newblock The moment problem with bounded density.
+\newblock arXiv:math/0607463v2 [math.FA], 2007.
+\newblock URL \url{https://arxiv.org/abs/math/0607463}.
+
+\bibitem[Brown et~al.(2024)Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and
+  Mirhoseini]{brown2024}
+Bradley Brown, Jordan Juravsky, Ryan Ehrlich, Ronald Clark, Quoc~V. Le,
+  Christopher R{\'e}, and Azalia Mirhoseini.
+\newblock Large language monkeys: Scaling inference compute with repeated
+  sampling.
+\newblock arXiv:2407.21787, 2024.
+
+\bibitem[Ma et~al.(2025)Ma, Zhang, Zhang, Yu, Luo, and Tang]{ma2025}
+Zeyao Ma, Xiaokang Zhang, Jing Zhang, Jifan Yu, Sijia Luo, and Jie Tang.
+\newblock Dynamic scaling of unit tests for code reward modeling.
+\newblock In \emph{Proceedings of the 63rd Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers)}, pages 6917--6935,
+  Vienna, Austria, 2025. Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/2025.acl-long.343}.
+\newblock URL \url{https://aclanthology.org/2025.acl-long.343/}.
+
+\bibitem[Pinkus(1985)]{pinkus1985}
+Allan Pinkus.
+\newblock \emph{{$n$}-Widths in Approximation Theory}, volume~7 of
+  \emph{Ergebnisse der Mathematik und ihrer Grenzgebiete}.
+\newblock Springer, Berlin, 1985.
+\newblock \doi{10.1007/978-3-642-69894-1}.
+
+\bibitem[Newman and Rivlin(1976)]{newman1976}
+Donald~J. Newman and Theodore~J. Rivlin.
+\newblock Approximation of monomials by lower degree polynomials.
+\newblock \emph{Aequationes Mathematicae}, 14\penalty0 (3):\penalty0 451--455,
+  1976.
+\newblock \doi{10.1007/BF01835995}.
+
+\bibitem[Szeg{\H{o}}(1975)]{szego1939}
+G{\'a}bor Szeg{\H{o}}.
+\newblock \emph{Orthogonal Polynomials}, volume~23 of \emph{American
+  Mathematical Society Colloquium Publications}.
+\newblock American Mathematical Society, Providence, RI, 4 edition, 1975.
+\newblock \doi{10.1090/coll/023}.
+
+\bibitem[Hariri et~al.(2026)Hariri, Chen, Shahini, Singh, Ye, Samandar,
+  Ganguly, Sankar, Zhang, Wang, Peng, Zhang, Hinczewski, and
+  Chaudhary]{hariri2026}
+Mohsen Hariri, Weicong Chen, Nahal Shahini, Vikash Singh, Kai Ye, Amirhossein
+  Samandar, Debargha Ganguly, Sreehari Sankar, Yanyan Zhang, Shouren Wang,
+  Jerry Peng, Biyao Zhang, Michael Hinczewski, and Vipin Chaudhary.
+\newblock Test-time scaling in reasoning {LLM}s: Inference regimes, evaluation,
+  and reproducibility, 2026.
+\newblock URL \url{https://arxiv.org/abs/2608.04001}.
+
+\bibitem[Ettehad and Foucart(2021)]{ettehad2021}
+Mahmood Ettehad and Simon Foucart.
+\newblock Instances of computational optimal recovery: Dealing with observation
+  errors.
+\newblock \emph{SIAM/ASA Journal on Uncertainty Quantification}, 9\penalty0
+  (4):\penalty0 1438--1456, 2021.
+\newblock \doi{10.1137/20M1328476}.
+
+\bibitem[Dorner et~al.(2026)Dorner, Chen, Cruz, and Yang]{dorner2026}
+Florian~E. Dorner, Yatong Chen, Andre~F. Cruz, and Fanny Yang.
+\newblock {ROC-n-Reroll}: How verifier imperfection affects test-time scaling.
+\newblock In \emph{International Conference on Learning Representations}, 2026.
+\newblock \doi{10.48550/arXiv.2507.12399}.
+\newblock URL \url{https://arxiv.org/abs/2507.12399v3}.
+\newblock arXiv:2507.12399v3, revised 17 August 2026.
+
+\bibitem[Wang(2026)]{wang2026}
+Jason~Z. Wang.
+\newblock The evaluation blind spot: A stereological theory of benchmark
+  coverage for large language models.
+\newblock arXiv:2606.05169, 2026.
+\newblock URL \url{https://arxiv.org/abs/2606.05169}.
+
+\bibitem[Mallows(1973)]{mallows1973}
+C.~L. Mallows.
+\newblock Bounds on distribution functions in terms of expectations of
+  order-statistics.
+\newblock \emph{The Annals of Probability}, 1\penalty0 (2):\penalty0 297--303,
+  1973.
+\newblock \doi{10.1214/aop/1176996981}.
+
+\bibitem[Okolewski and Papadatos(2024)]{okolewski2024}
+Andrzej Okolewski and Nickos Papadatos.
+\newblock Finite sequences representing expected order statistics.
+\newblock \emph{Sankhy{\=a} A}, 86:\penalty0 755--774, 2024.
+\newblock \doi{10.1007/s13171-024-00343-z}.
+\newblock URL
+  \url{https://link.springer.com/article/10.1007/s13171-024-00343-z}.
+
+\bibitem[Huang et~al.(2025)Huang, Block, Liu, Jiang, Krishnamurthy, and
+  Foster]{huang2025}
+Audrey Huang, Adam Block, Qinghua Liu, Nan Jiang, Akshay Krishnamurthy, and
+  Dylan~J. Foster.
+\newblock Is {Best-of-N} the best of them? coverage, scaling, and optimality in
+  inference-time alignment.
+\newblock In \emph{Proceedings of the 42nd International Conference on Machine
+  Learning}, volume 267 of \emph{Proceedings of Machine Learning Research},
+  pages 25075--25126, 2025.
+\newblock URL \url{https://proceedings.mlr.press/v267/huang25c.html}.
+
+\end{thebibliography}

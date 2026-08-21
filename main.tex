@@ -1,0 +1,549 @@
+\documentclass[10pt,twocolumn]{article}
+
+\usepackage[letterpaper,top=0.48in,bottom=0.68in,left=0.55in,right=0.55in,columnsep=0.28in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{stfloats}
+\usepackage{seqsplit}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{titlesec}
+
+\setlist{nosep,leftmargin=*}
+\setlength{\columnsep}{0.28in}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{1.5em}
+\raggedbottom
+\titleformat{\section}{\large\bfseries}{\thesection}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.2ex plus 0.4ex minus 0.2ex}{0.5ex}
+\titlespacing*{\subsection}{0pt}{1ex plus 0.3ex minus 0.2ex}{0.35ex}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{classicalinput}{Classical input}
+\renewcommand{\theclassicalinput}{C0}
+\newcommand{\Prb}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cK}{\mathcal K}
+\newcommand{\cD}{\mathcal D}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Span}{\operatorname{span}}
+
+\begin{document}
+\makeatletter
+\twocolumn[
+\begin{@twocolumnfalse}
+\vspace*{-0.8em}
+\noindent\rule{\textwidth}{2.2pt}
+\vspace{1.35em}
+\begin{center}
+{\fontsize{20}{23}\selectfont\bfseries The geometry of AI validation: Exact certification limits for iid best-of-$N$ search\par}
+\vspace{1.25em}
+\noindent\rule{\textwidth}{0.45pt}
+\vspace{1.25em}
+{\large\bfseries Ricardo Fitas\par}
+\vspace{0.25em}
+{\normalsize Technical University of Darmstadt, 64289 Darmstadt, Germany\par}
+{\normalsize \href{mailto:rfitas99@gmail.com}{rfitas99@gmail.com}\par}
+\end{center}
+\vspace{0.8em}
+\end{@twocolumnfalse}
+]
+\makeatother
+
+\begin{center}
+{\large\bfseries Abstract}
+\end{center}
+\noindent\textbf{Abstract.}
+AI systems increasingly generate alternatives, inspect evidence, and deploy a selected output. Validation is therefore target-relative: evidence certifies deployment only in directions resolved by the interventions that produced it. We represent validation and deployment rules as kernels over a reliability surface. Their span geometry separates two resources: replication reduces sampling noise, whereas new intervention directions reduce structural blindness. We make this principle exact in the canonical iid best-of-$N$ problem. For iid candidates, scalar ranking, randomized ties, maximum selection, bounded binary truth, and an unchanged rank--truth relation, knowing best-of-$n$ reliability through $n=m$ leaves exact width
+\[
+B_{m,N}=1+2\sum_{r=1}^{m}(-1)^r
+\cos^{2N}\!\left\{\frac{r\pi}{2(m+1)}\right\},
+\]
+Explicit bounded worlds attain the whole interval, and this prefix is information-maximal among reliability-mean audits confined to $n\le m$. The governing scale is $m^2/N$: at $m\sim\sqrt N$, ambiguity is about $0.83$; in the iterated fixed-phase then small-$\varepsilon$ limit, width $\varepsilon$ requires $m\asymp\sqrt{N\log(1/\varepsilon)}$. Monotonicity gives an exact uniform-approximation frontier; a Lipschitz bound gives an exact capped-tail dual and order-sharp $L/m^2$ ambiguity. These results yield a two-gate audit rule: establish structural coverage, then add independent tasks for precision. Retrospective CodeRM programs construct compatible best-of-100 values spanning $[0.186,0.992]$ and $[0.305,0.996]$ as feasible witnesses, and a score-tail rule frozen after 82 discovery tasks reduced 500-label held-out 95th-percentile error from $0.180$ to $0.049$ and from $0.076$ to $0.035$. Beyond iid search, the geometry applies only to known or independently estimated kernels. The empirical analyses are illustrative, not prospective interventions.
+\par\smallskip
+\noindent\textbf{Keywords:} AI evaluation; inverse problems; post-selection inference; optimal experimental design; inference-time search.
+\par\medskip
+
+Artificial-intelligence systems increasingly do more than return a fixed output. They generate alternatives, compare them, and act on a selected answer, program, prompt, agent, molecule, experiment, or scientific hypothesis \citep{lu2024,gottweis2026,ellis2026}. The act of selection changes the population whose truth matters. Validation is therefore target-relative: reliability belongs to the inference produced by a deployment rule, not to a model as an intrinsic scalar.
+
+This paper begins from one geometric claim. Each validation intervention defines a kernel describing where it looks; deployment defines another kernel describing where it will place weight. The validated kernels span the directions resolved by evidence. If a deployment target lies outside that span, two reliability worlds can agree on every audit and still disagree after selection. That residual is \emph{structural blindness}. More observations inside the same interventions reduce noise but do not change the span; a new intervention can. If the target is chosen after evidence is inspected, validity must additionally protect the selectable family. Structural identification, post-selection inference, and evaluation design are thus consequences of the same target-relative geometry.
+
+We make that geometry exact in a canonical deployment problem. Suppose an evaluator knows, without sampling error, iid best-of-$n$ reliability for every $n=1,\ldots,m$, under a stable rank--truth law, scalar ranking, randomized ties, and maximum selection, but deployment searches $N>m$ candidates. How far apart can two systems be at $N$ while agreeing at every audited width? The answer is Eq.~\ref{eq:exactfrontier}; explicit worlds attain the whole interval. At $m\sim\sqrt N$, its limiting width remains approximately $0.83$, and small ambiguity $\varepsilon$ requires $m^2/N\sim\log(1/\varepsilon)$.
+
+The argument follows one idea through four consequences. A target outside the validated span creates exact structural ambiguity. A target selected after evaluation requires family-level rather than unrelated pointwise validity. Audit design should therefore add feasible directions that expand the span. In iid best-of-$N$ search, the geometry becomes a closed finite frontier, an information-maximality law for low-width reliability means, and a finite audit-depth rule. Shape constraints test whether the phenomenon survives monotonicity and smoothness; the finite-task planner and two objective-domain studies test how structural breadth interacts with task precision and deployment-matched labels. These are not separate warnings: they ask whether one selection direction is resolved by the interventions used to validate it.
+
+Optimal recovery, truncated Hausdorff moments, post-selection inference, and polynomial approximation supply established ingredients \citep{donoho1994,manski2003,berk2013,zrnic2023,hausdorff1921,dette1997}. The mathematical contribution is the validation-specific package obtained after those ingredients are specialized: a full attainable bounded-binary identified interval with explicit common-audit worlds; maximality of the complete prefix within the reliability-mean query class and its finite theta phase law; and exact monotone and capped-Lipschitz residual frontiers linked to a finite audit plan. We isolate the canonical $L^1$ calculation as classical input C0. SI Appendix, Section S11 compares each submitted object with the adjacent moment, expected-order-statistic, and best-of-$N$ literatures; no broader theorem about moment spaces or optimal recovery is asserted.
+
+The scope is equally explicit. The closed form $B_{m,N}$ applies only to iid candidates, scalar ranking, randomized ties, maximum selection, bounded truth, and a stable rank--truth law. The span theorem covers a different selection mechanism only when its audit and deployment kernels act on a common stable state space and are known or independently estimated. Unmodeled adaptive generation receives no certificate from either result. Here $m$ measures coverage of fixed search widths, not labels, tasks, generations, or monetary cost.
+\section*{Validation is a target-relative inverse problem}
+
+The geometry has three objects: $f$ describes where the system is reliable; each $v_j$ describes where a validation procedure looks; and $k$ describes where deployment will place weight. If $k$ emphasizes a direction that no combination of the $v_j$ observes, exact repetition inside the existing tests cannot recover the missing target. The best-of-$N$ result will make this general principle fully explicit for one important order statistic.
+
+Let $(\mathcal X,\mu)$ describe latent deployment conditions---for example, score ranks, prompts, task subpopulations, or workflow states. Let
+\begin{equation}
+f(x)=\Prb(T=1\mid X=x),\qquad 0\le f\le1,
+\label{eq:surface}
+\end{equation}
+be the unknown reliability surface. A normalized validation intervention $v_j\in L^1(\mu)$ observes
+\begin{equation}
+y_j=\langle v_j,f\rangle:=\int v_j(x)f(x)\,d\mu(x),
+\qquad \int v_j\,d\mu=1.
+\label{eq:validation}
+\end{equation}
+A deployment choice $w$ induces another normalized kernel $k_w$ and target
+\begin{equation}
+R_w(f)=\langle k_w,f\rangle.
+\label{eq:target}
+\end{equation}
+Kernels may be probability densities, signed contrasts, or known importance weights; normalization is used only to give the central evidence below the simple value $1/2$.
+
+Write $S_V=\Span\{v_1,\ldots,v_p\}\subset L^1(\mu)$ and define the blind residual
+\begin{equation}
+b(k;V)=\dist_{L^1}(k,S_V)
+=\inf_{s\in S_V}\|k-s\|_1.
+\label{eq:blindresidual}
+\end{equation}
+This distance has an exact inferential meaning.
+
+\begin{theorem}[Span theorem and sharp ambiguity]
+\label{thm:span}
+For $\cF=\{f\in L^\infty(\mu):0\le f\le1\}$ and validation operator $Kf=(\langle v_j,f\rangle)_{j=1}^p$:
+\begin{enumerate}[label=(\roman*)]
+\item $R_k(f)$ is identified by $Kf$ for every $f\in\cF$ if and only if $k\in S_V$.
+\item The largest separation between two validation-equivalent worlds is
+\begin{equation}
+\sup_{\substack{f,g\in\cF\\Kf=Kg}}
+|R_k(f)-R_k(g)|=b(k;V).
+\label{eq:pairambiguity}
+\end{equation}
+\item If all kernels integrate to one, the evidence $Kf=(1/2,\ldots,1/2)$ has an exact identified interval of width $b(k;V)$, centered at $1/2$.
+\end{enumerate}
+\end{theorem}
+
+The theorem formalizes the mental model. Validation-equivalent worlds can differ only in directions orthogonal to every $v_j$; pairing the deployment kernel with the largest bounded such difference gives exactly its distance from the validated span. The quotient-duality and extremizer argument appears in SI Appendix, Section S1. The equality is important: Eq.~\ref{eq:pairambiguity} is the attainable ambiguity, not only an upper bound.
+
+\paragraph{Generality at theorem level, not formula level.}
+A randomized shortlist, top-$k$ draw, rejection sampler, beam-search trace, or dependent candidate process induces a selected-state law different from $Nu^{N-1}$. If that law is known on a common stable state space, Theorem~\ref{thm:span} still gives its exact structural ambiguity as a distance from the audited span, without requiring iid candidates. It does not give that mechanism the best-of-$N$ value $B_{m,N}$. For an adaptive generator, the state must contain the relevant history and the policy-induced kernel must be known or independently estimated; if either is missing, neither the general theorem nor the iid frontier supplies a certificate. When those kernels are estimated with $L^1$ error bounds, SI Appendix, Section S7.2 gives an explicit perturbation penalty weighted by the reconstruction coefficients. Thus the broad result is a known- or estimated-kernel geometry, whereas the closed-form phase law is the exact iid specialization.
+
+For a selectable family $\cK=\{k_w:w\in\mathcal W\}$, define
+\begin{equation}
+B(\cK;V)=\sup_{w\in\mathcal W}b(k_w;V).
+\label{eq:familycapacity}
+\end{equation}
+This is the structural half of validation capacity. If $B=0$, every target in the family is reconstructible from the validated interventions. If $B$ is near one for probability kernels, some selectable target is compatible with nearly opposite reliability under the same exact evidence. Importantly, increasing the number of observations inside any existing $v_j$ does not change $S_V$ and hence cannot change $B$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.99\linewidth]{figures/fig1_geometry_adaptive_targets.pdf}
+\caption{\textbf{Target-relative and post-selection geometry.} (A) Validation kernels span $S_V$. A deployment kernel decomposes into a represented component and a blind residual whose exact $L^1$ norm is the structural ambiguity. Post-evaluation selection can choose a kernel with a large residual. The drawing is schematic; the theorem uses $L^1/L^\infty$ quotient duality. (B) For $M$ independent Gaussian target estimates, every fixed-target interval has 95\% coverage, but the same interval around the largest estimate rapidly loses coverage. Simultaneous protection widens only as $\sqrt{\log M}$ in this example, yet no amount of replication removes a nonzero blind residual.}
+\label{fig:geometry}
+\end{figure}
+
+\section*{Selection after evidence requires family-level validity}
+
+Pointwise identification and pointwise confidence are not enough when deployment is chosen after evaluation. For a finite target family, let $C_w(Y)$ be an interval for $R_w(f)$ and let $\widehat w(Y)$ be any measurable selector.
+
+\begin{proposition}[Arbitrary selection equals simultaneous protection]
+\label{prop:selection}
+A confidence system is valid at level $1-\alpha$ after \emph{every} measurable target-selection rule if and only if it covers all targets simultaneously:
+\begin{equation}
+\inf_{f\in\cF}\Prb_f\!\left\{R_w(f)\in C_w(Y)
+\ \text{for every }w\in\mathcal W\right\}\ge1-\alpha.
+\label{eq:simultaneous}
+\end{equation}
+\end{proposition}
+
+The necessity follows by selecting the first target whose interval misses, if one exists. This is the same logical reduction used in universal post-selection inference \citep{berk2013}; it is included to identify the correct unit of an AI validation claim, not as a new abstract post-selection theorem. A fixed, stable, or independently chosen selector can require less protection \citep{hubbard2016,zrnic2023}. An unrestricted search system cannot be certified by a collection of unrelated pointwise statements.
+
+Figure~\ref{fig:geometry}B gives the elementary Gaussian illustration: ordinary 95\% intervals have correct fixed-target coverage, but coverage collapses after deploying the target with the largest estimate. This stochastic selection cost requires family-level protection. The blind residual is different: it survives even when sampling noise is exactly zero. Under Gaussian audit noise of order $n^{-1/2}$, SI Appendix, Section S3 shows that any linear reconstruction $s_w=\sum_ja_{wj}v_j$ admits a bias-centered estimator satisfying, simultaneously for every $w$ and every $f\in\cF$,
+\begin{equation}
+|\widehat R_w-R_w(f)|
+\le \frac12\|k_w-s_w\|_1+\frac{q_{1-\alpha}(A,\Sigma)}{\sqrt n}.
+\label{eq:capacityband}
+\end{equation}
+The first term is structural and vanishes only when the deployment direction is represented. The second covers the selectable family and shrinks with replication. Thus replication changes sampling uncertainty, whereas a new intervention direction is needed to change structural blindness.
+
+\paragraph{Expanding the validated span.}
+The span theorem suggests choosing feasible new interventions---such as direct labels of selected winners or perturbed workflows---to minimize the largest blind residual over the deployment family. SI Appendix, Section S3.3 states the formal constrained-width objective. Redundant evaluations may improve precision while adding no new direction; one deployment-matched intervention can remove a residual that thousands of exchangeable items cannot.
+
+\section*{Making the geometry exact: the finite best-of-$N$ frontier}
+
+We now make the target-relative geometry fully explicit for the canonical score-and-select workflow. Let $(U_i,T_i)$ be iid candidates, where the randomized score percentile satisfies $U_i\sim\mathrm{Unif}(0,1)$ and $T_i\in\{0,1\}$. Define
+\begin{equation}
+f(u)=\Prb(T=1\mid U=u).
+\label{eq:ranktruth}
+\end{equation}
+For a score $S$ with atoms, the precise randomized percentile is
+\begin{equation}
+U=F_S(S^-)+Z\{F_S(S)-F_S(S^-)\},
+\qquad Z\sim\mathrm{Unif}(0,1)
+\label{eq:randomizedpercentile}
+\end{equation}
+with $Z$ independent. Then $U$ is uniform, while independence of the tie jitter makes $f$ constant almost everywhere on the percentile interval occupied by each score atom. The unrestricted frontier remains exact over the stated model class because continuous-score candidate laws attain it; conditioning on a fixed known atomic score law adds interval-constancy restrictions and can only narrow the frontier.
+Best-of-$n$ selects the largest percentile. Its reliability is
+\begin{equation}
+\theta_n=n\int_0^1u^{n-1}f(u)\,du
+=\langle k_n,f\rangle,\qquad k_n(u)=nu^{n-1}.
+\label{eq:spectrum}
+\end{equation}
+At $n=1$, $k_1$ weights every percentile equally. As $n$ grows, $k_n$ moves its mass into an increasingly thin upper tail: search has changed the population whose truth is being averaged. Exact audits at every $n=1,\ldots,m$ span the polynomials $\cP_{m-1}$. This is a bounded Hausdorff moment problem \citep{hausdorff1921,kadane1971}; the deployment target $k_N$ is a more tail-concentrated order-statistic kernel \citep{david1974,papadatos2017}.
+
+For a feasible audit vector $y=(y_1,\ldots,y_m)$, define the deployment identified set and its worst-case width by
+\begin{align}
+\mathcal I_{m,N}(y)
+&=\left\{\langle k_N,f\rangle:0\le f\le1,
+\ \langle k_n,f\rangle=y_n\ (n\le m)\right\},
+\label{eq:identifiedsetdefinition}\\
+W_{m,N}&=\sup_{y:\,\mathcal I_{m,N}(y)\ne\varnothing}
+\operatorname{diam}\mathcal I_{m,N}(y).
+\label{eq:worstwidthdefinition}
+\end{align}
+Let $U_m$ denote the degree-$m$ Chebyshev polynomial of the second kind and define $\sigma_m(u)=\sgn U_m(2u-1)$, with arbitrary values at its $m$ roots.
+
+\begin{classicalinput}[Canonical $L^1$ distance (classical)]
+\label{prop:classicaldistance}
+For integers $N>m\ge1$, canonical $L^1$ interpolation at the shifted roots of $U_m$ gives
+\begin{align}
+B_{m,N}
+&:=\dist_{L^1}(k_N,\cP_{m-1})\nonumber\\
+&=1+2\sum_{r=1}^{m}(-1)^r
+\cos^{2N}\!\left\{\frac{r\pi}{2(m+1)}\right\}.
+\label{eq:exactfrontier}
+\end{align}
+This approximation statement, including its nodes, error sign, and distance, is classical \citep{bernstein1926,bojanov1986,watson2000,pinkus1989,mason2003}.
+\end{classicalinput}
+
+\begin{theorem}[Finite-prefix certification theorem]
+\label{thm:chebyshev}
+For integers $N>m\ge1$, the worst-case bounded-reliability identified width in Eq.~\ref{eq:worstwidthdefinition} is exactly
+\begin{equation}
+W_{m,N}=B_{m,N}.
+\label{eq:certificationwidth}
+\end{equation}
+Define two complete joint candidate laws $P_\pm$ by
+\begin{equation}
+\begin{aligned}
+U_\pm&\sim\mathrm{Unif}(0,1),\\
+T_\pm\mid U_\pm=u&\sim\mathrm{Bernoulli}\{f_\pm(u)\},\\
+f_\pm(u)&=\frac{1\pm\sigma_m(u)}2,
+\end{aligned}
+\label{eq:blindworlds}
+\end{equation}
+and take candidate sequences iid under each law. These worlds satisfy $\theta_n^+=\theta_n^-=1/2$ for every $n\le m$, but
+\begin{equation}
+\theta_N^\pm=\frac{1\pm B_{m,N}}2.
+\label{eq:exactseparation}
+\end{equation}
+At the common evidence $(\theta_1,\ldots,\theta_m)=(1/2,\ldots,1/2)$, the identified set is exactly
+\begin{equation}
+\left[\frac{1-B_{m,N}}2,\frac{1+B_{m,N}}2\right];
+\label{eq:fullidentifiedset}
+\end{equation}
+every interior value is attained by the iid candidate law with $U\sim\mathrm{Unif}(0,1)$ and $T\mid U=u\sim\mathrm{Bernoulli}\{\lambda f_+(u)+(1-\lambda)f_-(u)\}$ for some $\lambda\in[0,1]$. Consequently Eq.~\ref{eq:exactfrontier} is the full worst-case identified width, not only a lower bound.
+\end{theorem}
+
+Classical input C0 computes a distance. Theorem~\ref{thm:chebyshev} turns it into an attained certification statement: admissible worlds $(1\pm\sigma_m)/2$ share one feasible audit vector, attain both deployment endpoints, and fill the interval by mixtures. The proof is in SI Appendix, Section S4; the mathematical boundary is documented separately in Section S11.
+
+\begin{proposition}[Information maximality of the complete low-width prefix]
+\label{prop:prefixoptimal}
+Consider any finite family of reliability-mean audits whose kernels are randomized mixtures of widths at most $m$,
+\begin{equation}
+a_\ell=\sum_{n=1}^m q_{\ell n}k_n,
+\qquad q_{\ell n}\ge0,
+\quad \sum_{n=1}^m q_{\ell n}=1,
+\label{eq:mixedaudit}
+\end{equation}
+and let $S_A=\Span\{a_\ell\}$. Its worst-case ambiguity at width $N>m$ is
+\begin{equation}
+\dist_{L^1}(k_N,S_A)\ge B_{m,N}.
+\label{eq:auditoptimality}
+\end{equation}
+Equality is attained by the complete prefix $k_1,\ldots,k_m$. The same lower bound holds for a sequential schedule that chooses each such mean audit after earlier audit means are observed.
+\end{proposition}
+
+Every kernel in Eq.~\ref{eq:mixedaudit} lies in $\mathcal P_{m-1}$, whereas the complete prefix spans that entire space. Sequential choice cannot distinguish the endpoint worlds because both return mean $1/2$ for every admissible query. Thus the theorem is not merely about one convenient sweep of widths: among all exact population-mean schedules whose revealed kernels remain mixtures of fixed widths $n\le m$, the complete prefix is already the structurally strongest possible design. The claim excludes score-dependent stopping within a candidate run, finite-sample outcome-adaptive coefficient selection, direct width-$N$ labels, and candidate-level rank--truth measurements; those can reveal a new direction or require uniform finite-sample control. The proof is in SI Appendix, Section S4.6.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.99\textwidth]{figures/fig2_exact_best_of_n_frontier.pdf}
+\caption{\textbf{Exact and shape-restricted search--validation frontiers.} (A) For $m=6$, complementary Chebyshev-sign reliability surfaces produce the same first six audited reliabilities. (B) They agree throughout the audited range and then separate maximally. (C) Finite exact widths collapse under $m^2/N$ to the Jacobi-theta frontier; the smooth Legendre witness alone understates unrestricted ambiguity. (D) Under monotonicity and a Lipschitz bound $L$, an explicit smooth pair and a positive-polynomial recovery bound bracket normalized ambiguity. Regularity changes its magnitude to order $L/m^2$ but preserves the degree-squared endpoint-resolution phase.}
+\label{fig:frontier}
+\end{figure*}
+
+The exact frontier has a nontrivial phase limit.
+
+\begin{corollary}[Search--validation phase law]
+\label{cor:phase}
+If $m,N\to\infty$ with $m^2/N\to\tau\in(0,\infty)$, then
+\begin{equation}
+B_{m,N}\longrightarrow
+B(\tau):=\vartheta_4\!\left(0,e^{-\pi^2/(4\tau)}\right).
+\label{eq:thetafrontier}
+\end{equation}
+Define $\tau_\varepsilon=\inf\{\tau>0:B(\tau)\le\varepsilon\}$. After first taking the joint limit at fixed $\tau$ and then letting $\varepsilon\downarrow0$,
+\begin{equation}
+\tau_\varepsilon=\log\frac1\varepsilon
++\frac12\log\log\frac1\varepsilon
++\log\frac4{\sqrt\pi}+o(1).
+\label{eq:auditlaw}
+\end{equation}
+No uniform finite-$(m,N)$ statement is asserted for an arbitrary sequence $\varepsilon=\varepsilon_N$.
+\end{corollary}
+
+The phase is sharper than the statement that $m$ must be of order $\sqrt N$. At $m^2/N=1$, the exact limiting width is approximately $0.83$: auditing through $m\approx\sqrt N$ still permits reliability near opposite ends of the unit interval. Intuitively, $m$ polynomial moments resolve the endpoint only on a scale of order $m^{-2}$, while best-of-$N$ concentrates on a scale of order $N^{-1}$. Their ratio is $m^2/N$. The transformed theta series, both asymptotic regimes, and the derivation of Eq.~\ref{eq:auditlaw} are in SI Appendix, Section S5 \citep{whittaker1927}.
+
+\section*{Robustness: the degree-squared law survives shape constraints}
+
+The exact frontier above is distribution-free. Its principal scientific stress test is whether blindness survives after ruling out oscillatory reliability. The Chebyshev worlds in Eq.~\ref{eq:blindworlds} jump between zero and one; let $\cF_\uparrow$ instead be the nondecreasing $[0,1]$-valued functions and, for $0<L<\infty$, let $\cF_{\uparrow,L}$ additionally have Lipschitz constant at most $L$. For realized feasible evidence $y$, define
+\begin{equation}
+\mathcal I_{\mathcal G}(y)
+=\{\theta_N(f):f\in\mathcal G,\ \theta_n(f)=y_n,\ n\le m\}.
+\label{eq:shapeidentifiedset}
+\end{equation}
+Its exact endpoint programs are in SI Appendix, Section S6. The design frontier is instead the largest compatible width over feasible evidence:
+\begin{equation}
+\begin{aligned}
+\Delta^{\mathcal G}_{m,N}
+&=\sup_{\mathcal I_{\mathcal G}(y)\ne\varnothing}
+  \mathrm{diam}\,\mathcal I_{\mathcal G}(y)\\
+&=\sup_{\substack{f,g\in\mathcal G\\
+\theta_n(f)=\theta_n(g)\ (n\le m)}}
+  \bigl|\theta_N(f)-\theta_N(g)\bigr|.
+\end{aligned}
+\label{eq:shapeambiguity}
+\end{equation}
+For $a=(a_1,\ldots,a_m)\in\mathbb R^m$, put
+\begin{equation}
+z_a(t)=1-t^N-\sum_{n=1}^ma_n(1-t^n)
+\label{eq:tailresidual}
+\end{equation}
+and define
+\begin{equation}
+H_L(z)=\sup_{\substack{c\ge0,\ 0\le q\le L\\c+\int_0^1q\le1}}
+\left\{cz(0)+\int_0^1z(t)q(t)\,dt\right\}.
+\label{eq:cappedtail}
+\end{equation}
+Equivalently, with $[x]_+=\max(x,0)$,
+\begin{equation}
+H_L(z)=\inf_{\lambda\ge0}
+\left\{\lambda+[z(0)-\lambda]_+
++L\int_0^1[z(t)-\lambda]_+\,dt\right\}.
+\label{eq:cappedthreshold}
+\end{equation}
+
+\begin{theorem}[Exact shape-constrained frontiers]
+\label{thm:regularity}
+For integers $N>m\ge1$:
+\begin{enumerate}[label=(\roman*)]
+\item For monotone reliability,
+\begin{equation}
+\Delta^{\uparrow}_{m,N}
+=2\inf_{p\in\cP_m}\|u^N-p(u)\|_\infty.
+\label{eq:monotoneexact}
+\end{equation}
+Thus the worst monotone worlds may be chosen as step functions, and the exact validation problem is uniform monomial approximation rather than the unrestricted $L^1$ problem.
+\item For every $0<L<\infty$, monotone $L$-Lipschitz reliability has the exact finite dual
+\begin{equation}
+\Delta^{\uparrow,L}_{m,N}
+=\inf_{a\in\mathbb R^m}\{H_L(z_a)+H_L(-z_a)\}.
+\label{eq:exactcappeddual}
+\end{equation}
+Evaluation therefore reduces to the $m$ audit coefficients and the scalar threshold in Eq.~\ref{eq:cappedthreshold}.
+\end{enumerate}
+\end{theorem}
+
+The proof represents a monotone law as the distribution function of a subprobability measure. With a Lipschitz bound, this measure has a baseline atom and an absolutely continuous component with density capped by $L$. Compact-measure separation gives Eqs.~\ref{eq:monotoneexact} and \ref{eq:exactcappeddual} without a duality gap and proves attainment. Bounded-density moment theory supplies adjacent compact-set characterizations \citep[Theorem~3(a--c), pp.~5--6]{lasserre2006}; the submitted object is the residual induced by this audit/deployment pair.
+
+\begin{corollary}[Constructive endpoint-resolution bounds]
+\label{cor:regularitybounds}
+Let $d=\lfloor(m-1)/2\rfloor$, let $\xi_{d+1}$ be the largest zero on $[0,1]$ of the shifted Legendre polynomial of degree $d+1$, and put
+\begin{equation}
+A_{m,L}=\min\left\{\frac1{m+1},\frac{L}{m(m+1)}\right\},\quad
+D_{m,N}=\prod_{j=1}^m\frac{N-j}{N+j}.
+\label{eq:regularconstants}
+\end{equation}
+Then
+\begin{equation}
+\begin{aligned}
+A_{m,L}D_{m,N}&\le\Delta^{\uparrow,L}_{m,N},\\
+\Delta^{\uparrow,L}_{m,N}
+&\le\min\left\{B_{m,N},
+L\left(1-\xi_{d+1}+\frac1{N+1}\right),1\right\}.
+\end{aligned}
+\label{eq:regularbounds}
+\end{equation}
+If $L$ is fixed and $m^2/N\to\tau\in(0,\infty)$, then
+\begin{equation}
+e^{-\tau}\le\liminf\frac{m^2\Delta^{\uparrow,L}_{m,N}}L
+\le\limsup\frac{m^2\Delta^{\uparrow,L}_{m,N}}L
+\le j_{0,1}^2+\tau,
+\label{eq:regularphase}
+\end{equation}
+where $j_{0,1}\simeq2.4048$ is the first positive zero of $J_0$.
+\end{corollary}
+
+Both bounds are constructive. The lower bound builds two smooth monotone worlds from a shifted Legendre polynomial; the upper bound uses a nonnegative polynomial audit concentrated near the endpoint. Their constants do not match, so Eq.~\ref{eq:regularphase} is order-sharp rather than a closed form; the exact finite quantity is Eq.~\ref{eq:exactcappeddual}. This changes the magnitude of ambiguity to order $L/m^2$ while preserving the competition between $m^{-2}$ endpoint resolution and $N^{-1}$ deployment concentration (Fig.~\ref{fig:frontier}D).
+
+The dual is numerically accessible rather than only formal. With 8,192 percentile bins, floating-point primal and continuum-dual estimates are $0.046130661$ and $0.046130667$ at $(m,N,L)=(4,16,1)$ and $0.020791486$ and $0.020791501$ at $(8,64,1)$. These are agreement diagnostics, not interval-arithmetic-certified enclosures; the rigorous constructive brackets are $[0.01409,0.27015]$ and $[0.00449,0.08482]$. SI Appendix, Section S6 reports convergence, optimizers, and sensitivity. Because $u$ is percentile rank, $L$ is invariant to monotone score transformations, but the audit prefix does not validate it. A defensible bound must come from scientific knowledge or independent candidate-level data with uniform uncertainty; otherwise the frontier should be reported over $L$.
+
+\section*{From geometry to an audit decision}
+
+The population frontier determines whether a finite audit is worth extending by replication. Let $Z_{i,n}\in[0,1]$ be the width-$n$ outcome on task $i$, with tasks independent and identically distributed and $\E Z_{i,n}=\theta_n$. For deterministic coefficients $a\in\mathbb R^m$ chosen independently of these audit outcomes, put $s_a=\sum_{n=1}^ma_nk_n$ and $\widehat\theta_N(a)=1/2+\sum_na_n(\overline Z_n-1/2)$.
+
+\begin{corollary}[Finite-task audit planner]
+\label{cor:finiteplanner}
+For every $a$ and $0<\alpha<1$, with probability at least $1-\alpha$,
+\begin{equation}
+|\widehat\theta_N(a)-\theta_N|
+\le \frac12\|k_N-s_a\|_1
++\|a\|_1\sqrt{\frac{\log(2/\alpha)}{2T}}.
+\label{eq:finiteplanner}
+\end{equation}
+The smallest right side over a prespecified coefficient class is a computable bias--noise certificate. As $T\to\infty$, twice its infimum tends to $B_{m,N}$. Same-sample outcome-dependent coefficient choice requires sample splitting or uniform concentration over the searched class.
+\end{corollary}
+
+This yields a two-gate rule. The \emph{structural gate} asks whether $B_{m,N}\le\varepsilon$; if it fails, no number of additional independent tasks and no randomized or sequential schedule confined to widths at most $m$ can achieve full width $\varepsilon$. The \emph{sampling gate} is evaluated only after structural breadth is adequate; it asks whether the coefficient-amplified task term in Eq.~\ref{eq:finiteplanner} is small enough. Failure there can be repaired by more independent tasks. A deployment-matched intervention changes the first gate by adding a new kernel direction rather than merely reducing noise.
+
+For $N=100$ and 95\% confidence, full width $0.10$ requires at least $m=19$ before sampling error is considered. If direct deployment-winner labels are feasible, their structural term is zero and Hoeffding's inequality gives the separate sufficient count of 738 independent tasks. When audit and deployment kernels are estimated rather than known, SI Appendix, Section S7.2 adds the explicit penalty $\delta_N+\sum_n|a_n|\delta_n$. SI Appendix, Section S3.3 gives the planning table. These calculations convert the frontier into a choice among three noninterchangeable actions: widen the audited search range, increase independent task count, or collect labels in the deployment direction.
+
+\section*{Retrospective illustrations of the same geometry}
+
+The empirical analyses ask whether changing search width changes the truth target in objective data, whether reversals can coexist with favorable mean scaling, and whether a realistic audited prefix admits widely separated deployment values. They are mechanism demonstrations in fixed public populations, not prevalence estimates or prospective interventions; SI Appendix, Sections S8--S10, records the inferential boundary. The sampling idealization is conditional on task: task $t$ has its own randomized percentile and reliability law $f_t$, with $\theta_{n,t}=\int k_n f_t$. Equal-weight macro averaging gives $\overline\theta_n=\int k_n\overline f$ for $\overline f$ equal to the average task law, without treating candidates from different tasks as exchangeable. Every reported best-of-$n$ value is the exact with-replacement maximum-score functional of a fixed task-specific empirical population. The two domains vary output type, verifier construction, truth mechanism, and search range while retaining this iid score-and-select estimand. Treating problems rather than candidate outputs as the independent units, the first analysis uses the two pinned Monkey Business files \citep{brown2024}. Each file contains exactly 127 GSM8K problem records with 10,000 independently generated solutions and exact final-answer correctness labels; all 127 records were included for each model, with no outcome- or completeness-based exclusion (2.54 million candidates in total).
+
+For each problem and model, a seeded 2,000-solution reference split estimated the frequency of each normalized final answer. That frequency served as a simple consensus score. A disjoint 8,000-solution deployment split supplied score ranks and truth labels. We evaluated the empirical best-of-$n$ law exactly for $n=1,2,4,\ldots,4096$, averaging uniformly across tied winning scores. Problem-bootstrap intervals used 20,000 resamples. Ten independent reference/deployment splits assessed stability.
+
+Consensus ranking was strong on average. Macro within-problem AUC was $0.907$ (95\% bootstrap interval, $0.862$--$0.947$) over the 125 of 127 mixed-label 8B deployment populations, and $0.962$ ($0.923$--$0.990$) over the 107 of 127 mixed-label 70B populations; AUC is undefined for a single-class problem. Mean selected truth rose from $0.768$ at $n=1$ to $0.882$ at $n=4096$ for 8B, and from $0.931$ to $0.968$ for 70B (Fig.~\ref{fig:empirical}A). Yet 14 of 127 8B problems and three 70B problems lost more than one percentage point; worst losses were $0.480$ and $0.360$ (Fig.~\ref{fig:empirical}C). Across 10 splits, the 8B harm count stayed between 13 and 15 and the same three 70B problems were harmed in every split (Fig.~\ref{fig:empirical}E). The data do not imply that the extremal Chebyshev worlds are typical. They establish that changing the search kernel changes a practically relevant reliability target even when aggregate ranking looks favorable.
+
+The independent replication uses 164 HumanEval+ tasks from the CodeRM release \citep{ma2025}. For each task and each Llama-3 model, we analyzed 100 candidate programs. The verifier score is the fraction of 100 CodeRM-8B-generated unit tests passed; correctness is the separate HumanEval+ \texttt{plus\_status} label. The task-level analysis therefore contains 32,800 programs and 3.28 million candidate--unit-test executions, but inference remains across 164 tasks. Exact tie-averaged best-of-$n$ curves and 20,000 task bootstraps used the same estimand as the math experiment. All 164 tasks contained both truth classes for each model and therefore entered the macro AUCs: $0.931$ ($0.898$--$0.959$) for 8B and $0.881$ ($0.818$--$0.938$) for 70B. Mean selected truth rose from $0.536$ to $0.715$ and from $0.737$ to $0.788$ between $n=1$ and $100$ (Fig.~\ref{fig:empirical}B). Nevertheless, 10 and four tasks lost more than one point, with worst losses of $0.722$ and $0.600$ (Fig.~\ref{fig:empirical}D). The reversal phenomenon therefore survives a change of task, verifier, ground-truth mechanism, and search range.
+
+\paragraph{A retrospective empirical compatibility construction.}
+We next asked the same question of the CodeRM data that the theorem asks of an unknown system. Within each task, tie-group truth was spread uniformly over its score-rank intervals; averaging the 164 task laws reproduces every macro best-of-$n$ mean exactly. We then concealed the best-of-100 value, retained only the plug-in audits $\widehat\theta_1,\ldots,\widehat\theta_8$, and optimized $\theta_{100}$ within the subclass of bounded rank--truth laws that are constant on 1,000 percentile bins.
+
+For 8B, the observed best-of-100 truth was $0.715$ (95\% task-bootstrap interval, $0.650$--$0.778$), while two such laws matching all eight plug-in audits reached $0.186$ and $0.992$ at deployment (SI Appendix, Fig. S1A,C). For 70B, the observed value was $0.788$ ($0.725$--$0.847$), while compatible witnesses reached $0.305$ and $0.996$ (SI Appendix, Fig. S1B,D). Because every optimizer is a bounded continuum step function, these separations are genuine feasible witnesses and therefore lower bounds on the unrestricted continuum identified width; the displayed endpoints are not claimed to solve that unrestricted problem exactly. Orthogonalizing the same equality row space reduced raw audit residuals below $1.3\times10^{-14}$, and changing the grid from 200 to 1,000 bins moved every displayed endpoint by less than $0.007$. Allowing 95\% simultaneous max-$t$ task-bootstrap bands produced 1,000-bin feasible spans $[0.003,1.000]$ and $[0.016,1.000]$. At $m=20$, the corresponding plug-in spans narrowed to $0.047$ and $0.038$, yet the finite-task band spans remained $0.897$ and $0.803$. This is the two-gate distinction in Corollary~\ref{cor:finiteplanner}: broader interventions narrow the structural witness, whereas estimated high-order moments can still amplify task noise. SI Appendix, Section S10, reports the construction and values for $m=2$ through $20$.
+
+\paragraph{A retrospective masked-label acquisition replay.}
+To examine the design consequence within the fixed CodeRM population, we treated every candidate truth as hidden until selected by a score-only audit rule. Each draw sampled a task uniformly and then a uniform candidate, a best-of-8 winner, a randomized top-5\% score percentile, or a best-of-100 deployment winner. Horvitz--Thompson estimates targeted the macro best-of-100 truth. Across 5,000 replayed acquisitions at each budget, 500 uniform labels left 95th-percentile absolute errors of $0.184$ and $0.110$ for 8B and 70B; top-tail labels reduced them to $0.047$ and $0.038$, and deployment-winner labels to $0.039$ and $0.036$ (Fig.~\ref{fig:empirical}F). The same top-5\% rule, budgets, and estimator were used for both models without model-specific retuning. Its observed truncation biases were below $10^{-4}$; its distribution-free omitted-mass bound was $0.95^{100}=0.0059$. SI Appendix, Section S9, reports the full budget curves, estimator, and the earlier asymptotic comparison. This is a within-pool estimator comparison on public labels, not prospective evidence about intervention effectiveness or realized costs.
+
+\paragraph{A frozen-rule held-out test.}
+We then separated design choice from evaluation. A seeded, label-blind split assigned the 164 shared CodeRM tasks to 82 discovery and 82 held-out tasks. Using discovery outcomes only, we chose among prespecified 5\%, 10\%, and 20\% score-tail audits by mean 95th-percentile error across the two models; all three leave at most $0.95^{100}=0.0059$ of target mass unsupported. The 5\% rule was selected and frozen before either held-out target or error was computed. At 500 labels and 5,000 replays, its held-out 95th-percentile errors were $0.049$ rather than $0.180$ under uniform labels for 8B, and $0.035$ rather than $0.076$ for 70B. Held-out absolute biases were below $8\times10^{-5}$. This result shows that the audit-design choice transferred across a task split within CodeRM; because candidates and labels were already public, it is still retrospective and does not estimate prospective effect or acquisition cost.
+
+\begin{table*}[t]
+\centering
+\caption{\textbf{What changes when the audit follows the best-of-100 target.} The first two rows report widths of 1,000-bin CodeRM feasible constructions under simultaneous task bands; they are witnessed lower bounds on unrestricted continuum ambiguity. The last two report held-out 95th-percentile absolute errors across 5,000 masked-label replays at 500 labels after the tail fraction was selected on a separate 82-task discovery split. These are different metrics, shown together to separate structural breadth, task precision, and label direction. The comparison is retrospective, not a prospective cost-effectiveness claim.}
+\label{tab:auditdecision}
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}cc@{}}
+\toprule
+Evidence collected & Structural or sampling consequence & 8B & 70B \\
+\midrule
+Mean prefix, $n\le8$ & $B_{8,100}=0.906$; constructed task-band span & 0.997 & 0.984 \\
+Mean prefix, $n\le20$ & $B_{20,100}=0.057$; constructed task-band span & 0.897 & 0.803 \\
+500 held-out uniform labels & Unbiased importance weighting; high weight variance & 0.180 & 0.076 \\
+500 held-out frozen top-5\% labels & Tail-matched; omitted target mass $\le0.0059$ & 0.049 & 0.035 \\
+\bottomrule
+\end{tabular}
+\endgroup
+\end{table*}
+
+Table~\ref{tab:auditdecision} makes the design implication concrete on one fixed target. Extending the prefix from $m=8$ to $20$ sharply narrows the 1,000-bin plug-in witness, yet finite-task feasible spans remain wide because high-order moment estimation amplifies noise. Holding the label budget at 500 and moving acquisition toward the deployment tail instead reduces held-out replay error by factors 3.67 and 2.15 relative to uniform labels. The metrics are not interchangeable and do not establish a causal ranking of audit programs; together they show why ``collect more labels'' is incomplete without specifying audit breadth, independent units, and the direction in which labels are collected.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/fig3_empirical_validation_design.pdf}
+\caption{\textbf{Search changes reliability in two objective domains.} (A) Mean selected truth and 95\% problem-bootstrap intervals across 127 GSM8K problems (2.54 million solutions) under answer-consensus ranking. (B) Independent replication across 164 HumanEval+ tasks (32,800 programs; 3.28 million CodeRM unit-test executions). (C,D) Sorted task-level changes show severe reversals despite favorable means and high macro AUC. (E) GSM8K harm counts persist across 10 disjoint reference/deployment splits; macro AUC remains 0.90--0.96. (F) In 5,000 retrospective masked-label replays at a 500-label budget, score-matched CodeRM audits reduce the 95th percentile of absolute best-of-100 estimation error relative to uniform candidate labels. Truth is used only when a candidate is sampled; full labels score the emulation afterward.}
+\label{fig:empirical}
+\end{figure*}
+
+The masked-label result is not a theorem about all models, and importance weighting need not be the preferred estimator. Within this fixed public population, it provides a finite, unit-matched demonstration of the span-design principle: collecting labels in the deployment direction can dominate replicating labels under a mismatched intervention. The held-out split strengthens the inference from in-sample feasibility to transfer across tasks within CodeRM; it does not establish prospective effectiveness. The complete tables, formulas, split assignments, CodeRM replication, and reconstruction procedures are in SI Appendix, Sections S8--S10.
+
+\section*{Discussion}
+
+AI search changes the target that validation must certify. The span theorem expresses the resulting geometry as the organizing separation
+\begin{equation*}
+\begin{aligned}
+\text{certificate width}
+&=\text{structural blindness}\\
+&\quad+\text{sampling uncertainty}.
+\end{aligned}
+\end{equation*}
+The finite best-of-$N$ theorem makes the first term exact: reliability through width $m$ cannot certify deployment beyond Eq.~\ref{eq:exactfrontier}, and the same lower bound applies to every randomized or sequential reliability-mean schedule confined to widths at most $m$. This is an audit-complexity limit rather than a defect of one prefix protocol. Theorem~\ref{thm:regularity} shows that the interpretation is not confined to oscillatory Chebyshev worlds: regularity changes the magnitude, but the competition between $m^{-2}$ audit resolution and $N^{-1}$ deployment concentration remains. More data inside the same span attack precision but cannot beat its structural floor. A thousand evaluations produced inside one epistemic frame may therefore constitute one validation intervention.
+
+This changes evaluation practice. The allowable prompts, search budgets, tools, subpopulations, and workflows should be stated as a deployment family. Uncertainty should cover that family simultaneously unless selection is demonstrably restricted or stable. New tests should be chosen for span expansion: ground-truthing winners, near-winners, or perturbed workflows can be more informative than labeling more random candidates. In CodeRM, the discovery-selected tail rule retained its advantage after it was frozen and moved to held-out tasks, a finite check that the design choice was not selected on the evaluation tasks themselves. Any smoothness, exchangeability, or tail assumption doing the extrapolation should be visible and stress-tested.
+
+The span theorem requires a stable reliability surface and known or independently estimated kernels. The closed form further requires iid candidates, scalar ranking, randomized ties, maximum selection, and bounded truth; adaptive generation is outside $k_N(u)=Nu^{N-1}$ unless its history and policy are modeled. The empirical work is equally delimited: its independent units are 127 problems and 164 tasks, not millions of within-task outputs or test executions. The compatible worlds establish feasibility conditional on the prefix, not probability or prevalence. The held-out split blocks outcome-guided design selection on the evaluation tasks, but the replay still uses existing public candidates and labels rather than a prospective randomized intervention. Thus the data provide construct-level replication and retrospective held-out mechanism evidence only within iid score-and-select. A third domain could extend external validity but would not verify a distribution-free theorem. Universal guarantees are intentionally conservative; fixed, independent, or stable selection may permit narrower inference.
+
+The framework is therefore not an argument against AI search. Search improved mean accuracy in both public experiments. It is an argument that search changes what must be validated. When AI expands the set of selectable decisions faster than evaluation expands the span of interventions, apparent precision can grow while scientific identification deteriorates.
+
+\section*{Code and data availability}
+All manuscript source, analysis code, processed data, theorem checks, optimization outputs, and deterministic figure code are available at \url{https://github.com/rfitas-lab/geometry-of-ai-validation}. Monkey Business generations and labels are available at \url{https://huggingface.co/datasets/ScalingIntelligence/monkey_business}; CodeRM programs, annotations, and execution outputs are linked from \url{https://github.com/RUCKBReasoning/CodeRM}. Raw generations, programs, and execution logs are not redistributed because of their size.
+
+\paragraph{Competing interests.} The author declares no competing interest.
+
+\bibliographystyle{unsrtnat}
+{\small\bibliography{references}}
+
+\clearpage
+\onecolumn
+\noindent\rule{\textwidth}{1.6pt}
+\begin{center}
+{\LARGE\bfseries Supporting Information\par}
+\vspace{0.45em}
+{\large The geometry of AI validation: Exact certification limits for iid best-of-$N$ search\par}
+\vspace{0.35em}
+{\normalsize Ricardo Fitas\par}
+\end{center}
+\noindent\rule{\textwidth}{0.45pt}
+\vspace{0.8em}
+
+\newcommand{\one}{\mathbf 1}
+\setcounter{equation}{0}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\setcounter{theorem}{0}
+\setcounter{lemma}{0}
+\setcounter{proposition}{0}
+\setcounter{corollary}{0}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\renewcommand{\thelemma}{S\arabic{lemma}}
+\renewcommand{\theproposition}{S\arabic{proposition}}
+\renewcommand{\thecorollary}{S\arabic{corollary}}
+\renewcommand{\theHequation}{S\arabic{equation}}
+\renewcommand{\theHtable}{S\arabic{table}}
+\renewcommand{\theHfigure}{S\arabic{figure}}
+\providecommand{\theHtheorem}{}
+\providecommand{\theHlemma}{}
+\providecommand{\theHproposition}{}
+\providecommand{\theHcorollary}{}
+\renewcommand{\theHtheorem}{S\arabic{theorem}}
+\renewcommand{\theHlemma}{S\arabic{lemma}}
+\renewcommand{\theHproposition}{S\arabic{proposition}}
+\renewcommand{\theHcorollary}{S\arabic{corollary}}
+
+\input{supplementary_material}
+
+\end{document}

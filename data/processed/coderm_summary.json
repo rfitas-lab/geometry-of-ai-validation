@@ -1,0 +1,78 @@
+{
+  "source": "CodeRM public repository and execution-output archive",
+  "repository": "https://github.com/RUCKBReasoning/CodeRM",
+  "commit": "aa4946e9245ed41e24d60ad29e965132b5b84fe6",
+  "archive_sha256": "728780d642f465e91f8619de1bae0cb3192519278e87014d546cee9921d4e6c5",
+  "search_scales": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    100
+  ],
+  "bootstrap_resamples": 20000,
+  "bootstrap_seed": 92771,
+  "models": {
+    "Llama-3-8B": {
+      "tasks": 164,
+      "candidates": 16400,
+      "candidate_test_executions": 1640000,
+      "truth_n1": 0.5357926829268292,
+      "truth_n100": 0.7150830282681209,
+      "mean_delta": 0.17929034534129157,
+      "mean_delta_ci95": [
+        0.1339557819663352,
+        0.2262437413516138
+      ],
+      "macro_auc": 0.9305497051569075,
+      "macro_auc_ci95": [
+        0.8978892564993525,
+        0.9594840637874703
+      ],
+      "tasks_harmed_any": 12,
+      "tasks_harmed_gt_1pp": 10,
+      "tasks_harmed_gt_5pp": 8,
+      "worst_delta": -0.7224474920745944,
+      "best_delta": 0.9440794707796659
+    },
+    "Llama-3-70B": {
+      "tasks": 164,
+      "candidates": 16400,
+      "candidate_test_executions": 1640000,
+      "truth_n1": 0.7374390243902439,
+      "truth_n100": 0.7884445282729293,
+      "mean_delta": 0.0510055038826854,
+      "mean_delta_ci95": [
+        0.024761858424757956,
+        0.08006016462546789
+      ],
+      "macro_auc": 0.8813774800780869,
+      "macro_auc_ci95": [
+        0.818055210723856,
+        0.9383408698644544
+      ],
+      "tasks_harmed_any": 4,
+      "tasks_harmed_gt_1pp": 4,
+      "tasks_harmed_gt_5pp": 3,
+      "worst_delta": -0.5999993826133141,
+      "best_delta": 0.9440794707796659
+    }
+  },
+  "source_checksums": {
+    "Llama-3-8B": {
+      "annotations": "sol_llama3-8b_200_anno.jsonl",
+      "annotations_sha256": "cae513c7578a52c6d3110a13bbf2514e44a0cd58f2a4a258b58e7337c2af0211",
+      "results_member": "llama3-8b_sol_coderm-8b_ut/details/100_sol_100_ut_result.jsonl",
+      "results_sha256": "8169be74c8144e0bad6b593093a02e4963144f66a6a5f6b84c10ff1dd6e316d1"
+    },
+    "Llama-3-70B": {
+      "annotations": "sol_llama3-70b_200_anno.jsonl",
+      "annotations_sha256": "6ddb4273e4d9a35f7bef6016f37ac2e9b99d6bd7aad05357f7ff9399b0d45850",
+      "results_member": "llama3-70b_sol_coderm-8b_ut/details/100_sol_100_ut_result.jsonl",
+      "results_sha256": "7edb5fc98033f5de748c5dfe2f740cdeffb02020ead8f49988ea822d2d8d2fdf"
+    }
+  }
+}
